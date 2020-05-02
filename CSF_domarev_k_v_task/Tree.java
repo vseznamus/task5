@@ -1,28 +1,11 @@
 package CSF_domarev_k_v_task;
 
-import java.util.Stack;
+class Tree<T extends Number> {
 
-public class Tree<T extends Number> {
-
-    private int level  = 0;
+    private int level = 0;
     private TreeNode branch;
 
-    public class TreeNode {
-        TreeNode next;
-        public String data;
-        TreeNode left;
-        TreeNode prev;
-        int nodeLevel;
-        TreeNode right;
-        T value;
-
-        public TreeNode(T value) {
-            this.value = value;
-        }
-    }
-
-
-    public void input(T value, TreeNode nd) {
+    private void input(T value, TreeNode nd) {
         if (branch == null) {
             branch = new TreeNode(value);
             return;
@@ -30,70 +13,119 @@ public class Tree<T extends Number> {
         if (nd.value.intValue() > value.intValue()) {
             if (nd.left != null) {
                 input(value, nd.left);
-                if (nd.left.nodeLevel == nd.right.nodeLevel)
-                    nd.left.nodeLevel = level;
-                else {
-                    level++;
-                    nd.left.nodeLevel = level;
+            } else {
+                nd.left = new TreeNode(value);
+                if (nd.right == null) {
+                    nd.left.nodeLevel = nd.nodeLevel+1;
+                    if (level < nd.left.nodeLevel)
+                        level++;
+                } else {
+                    nd.left.nodeLevel = nd.right.nodeLevel;
                 }
             }
-            else {
-                nd.left = new TreeNode(value);
-            }
-        }
-        else if (nd.value.intValue() < value.intValue()) {
+        } else if (nd.value.intValue() < value.intValue()) {
             if (nd.right != null) {
                 input(value, nd.right);
-                if (nd.right.nodeLevel == nd.left.nodeLevel)
-                    nd.right.nodeLevel = level;
-                else {
-                    level++;
-                    nd.right.nodeLevel = level;
+            } else {
+                nd.right = new TreeNode(value);
+                if (nd.left == null) {
+                    nd.right.nodeLevel = nd.nodeLevel+1;
+                    if (level < nd.right.nodeLevel)
+                        level++;
+                } else {
+                    nd.right.nodeLevel = nd.left.nodeLevel;
                 }
             }
-            else {
-                nd.right = new TreeNode(value);
-            }
+
         }
     }
 
-    public void add(T value)
-    {
-        input(value , branch);
+    void add(T value) {
+        input(value, branch);
     }
 
+    private void prepareTreeForPrint(TreeNode nd) {
+        if (nd == null) return;
 
-    public void prepareTreeForPrint(TreeNode nd) {
-        if(nd == null) return;
-        String left = (nd.left == null ? "нету" : nd.left.value + "");
-        String right = (nd.right == null ? "нету" : nd.right.value + "");
-        System.out.println("Корень " + nd.value + " левый ребенок: " +left+ " правый ребенок: " + right );
+        String left;
+
+        if (nd.left == null)
+            left = "NONE";
+        else
+            left = nd.left.value + "";
+        String right;
+
+        if (nd.right == null)
+            right = "NONE";
+        else
+            right = nd.right.value + "";
+
+        System.out.println(nd.value + " -------> " + " left: " + left + " right: " + right);
+
         prepareTreeForPrint(nd.left);
         prepareTreeForPrint(nd.right);
     }
 
-    public void printTree()
-    {
+    void printTree() {
         prepareTreeForPrint(branch);
     }
 
-    public int getLevel() {
-        return level;
+    private void prepareChangedTreeForPrint(TreeNode nd) {
+        delete();
+
+        if (nd == null) return;
+
+        String left;
+
+        if (nd.left == null)
+            left = "NONE";
+        else
+            left = nd.left.value + "";
+
+        String right;
+
+        if (nd.right == null)
+            right = "NONE";
+        else
+            right = nd.right.value + "";
+
+        System.out.println(nd.value + " -------> "  + " left: " + left + " right: " + right);
+
+        prepareTreeForPrint(nd.left);
+        prepareTreeForPrint(nd.right);
     }
 
-    void contInOrder(TreeNode top){
-        Stack<TreeNode> stack = new Stack<> ();
-        while (top!=null || !stack.empty()){
-            if (!stack.empty()){
-                top=stack.pop();
-                if (top.right!=null) {
-                    top=top.right;
-                } else top=null;
-            }
-            while (top!=null){
-                stack.push(top);
-                top=top.left;
-            }
+    void printChangedTree() {
+        prepareChangedTreeForPrint(branch);
+    }
+
+
+    private void searchAndDeleteLeave(TreeNode nd) {
+        if (nd == null)
+            return;
+            if (nd.left != null)
+                if (nd.left.nodeLevel != level && nd.left.left == null && nd.left.right == null)
+                    nd.left = null;
+        searchAndDeleteLeave(nd.right);
+
+            if (nd.right != null)
+                if (nd.right.nodeLevel != level && nd.right.left == null && nd.right.right == null)
+                    nd.right = null;
+        searchAndDeleteLeave(nd.left);
+    }
+
+    private void delete() {
+        searchAndDeleteLeave(branch);
+    }
+
+    public class TreeNode {
+        TreeNode left;
+        int nodeLevel;
+        TreeNode right;
+        T value;
+
+        TreeNode(T value) {
+            this.value = value;
         }
     }
 

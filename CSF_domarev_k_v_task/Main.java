@@ -3,15 +3,13 @@ package CSF_domarev_k_v_task;
 public class Main {
 
     public static void main(String[] args) {
-	Tree<Integer> tree = new Tree<Integer>();
-	    tree.add(13);
-        tree.add(14);
-        tree.add(5);
-        tree.add(6);
-        tree.add(1);
-        tree.add(3);
+        Tree<Integer> tree = new Tree<>();
+        for (int i = 0; i<10; i++)
+            tree.add((int) (Math.random()*10 + 10));
 
         tree.printTree();
-        System.out.println(tree.getLevel());
+        System.out.println("");
+        tree.printChangedTree();
+
     }
 }
