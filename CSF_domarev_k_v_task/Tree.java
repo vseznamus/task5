@@ -47,20 +47,9 @@ class Tree<T extends Number> {
     private void prepareTreeForPrint(TreeNode nd) {
         if (nd == null) return;
 
-        String left;
-
-        if (nd.left == null)
-            left = "NONE";
-        else
-            left = nd.left.value + "";
-        String right;
-
-        if (nd.right == null)
-            right = "NONE";
-        else
-            right = nd.right.value + "";
-
-        System.out.println(nd.value + " -------> " + " left: " + left + " right: " + right);
+        for (int i = 0; i < nd.nodeLevel; i++)
+            System.out.print("  ");
+        System.out.println(nd.value);
 
         prepareTreeForPrint(nd.left);
         prepareTreeForPrint(nd.right);
@@ -75,21 +64,9 @@ class Tree<T extends Number> {
 
         if (nd == null) return;
 
-        String left;
-
-        if (nd.left == null)
-            left = "NONE";
-        else
-            left = nd.left.value + "";
-
-        String right;
-
-        if (nd.right == null)
-            right = "NONE";
-        else
-            right = nd.right.value + "";
-
-        System.out.println(nd.value + " -------> "  + " left: " + left + " right: " + right);
+        for (int i = 0; i < nd.nodeLevel; i++)
+            System.out.print("  ");
+        System.out.println(nd.value);
 
         prepareTreeForPrint(nd.left);
         prepareTreeForPrint(nd.right);
